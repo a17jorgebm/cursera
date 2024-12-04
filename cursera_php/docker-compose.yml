@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # PHP service
+  php:
+    image: php:8.0-apache
+    container_name: php_container
+    volumes:
+      - ./src:/var/www/html
+    ports:
+      - "8080:80"
+    networks:
+      - backend
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=mydb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=example
+  
+  # PostgreSQL service
+  db:
+    image: postgres:13
+    container_name: db_container
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+    networks:
+      - backend
+
+  # pgAdmin service
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    networks:
+      - backend
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+
+networks:
+  backend:
+    driver: bridge
