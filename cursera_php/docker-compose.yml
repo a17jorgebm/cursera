@@ -13,9 +13,10 @@ services:
       - backend
     environment:
       - POSTGRES_HOST=db
-      - POSTGRES_DB=mydb
+      - POSTGRES_DB=cursera
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=example
+    command: bash -c "apt-get update && apt-get install -y libpq-dev && docker-php-ext-install pdo pdo_pgsql && apache2-foreground"
   
   # PostgreSQL service
   db:
