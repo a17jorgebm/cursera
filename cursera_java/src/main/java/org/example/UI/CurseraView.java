@@ -10,6 +10,7 @@ public class CurseraView extends JFrame {
     Color verde= new Color(139, 218, 124);
     Color rojo= new Color(228, 132, 132);
     Color azul= new Color(132, 206, 228);
+    Color marron= new Color(205, 181, 154);
 
 
 
@@ -166,10 +167,13 @@ public class CurseraView extends JFrame {
         return row;
     }
 
-
+    //Pantalla de edicion de cada curso
     private JPanel createCourseEditScreen() {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Márgenes
+
+        JScrollPane scrollPane1 = new JScrollPane(panel);
+        scrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         // Título
         JLabel titleLabel = new JLabel("NOMBRE DEL CURSO");
@@ -182,13 +186,21 @@ public class CurseraView extends JFrame {
         centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
         JLabel courseDataLabel = new JLabel("RESTO DE DATOS DEL CURSO");
-        JButton professorButton = new JButton("SELECTOR DE PROFESOR");
-        professorButton.setFocusPainted(false);
 
         centerPanel.add(courseDataLabel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Espaciado
-        centerPanel.add(professorButton);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 20))); // Espaciado
+
+        // Sección de profesores
+        JLabel teachersLabel = new JLabel("PROFESORES");
+        JButton addTeacherButton = new JButton("SELECTOR PROFESOR");
+        addTeacherButton.setBackground(rojo);
+        addTeacherButton.setForeground(Color.WHITE);
+        addTeacherButton.setFocusPainted(false);
+
+        centerPanel.add(teachersLabel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        centerPanel.add(addTeacherButton);
 
         // Sección de alumnos
         JLabel studentsLabel = new JLabel("ALUMNOS");
@@ -205,17 +217,20 @@ public class CurseraView extends JFrame {
         JPanel studentsList = new JPanel(new GridLayout(0, 1, 5, 5));
         studentsList.setLayout(new GridLayout(4, 1, 10, 40));
         studentsList.setBorder(BorderFactory.createEmptyBorder(40, 10, 40, 10));
-        studentsList.setBackground(new Color(205, 181, 154)); // Fondo para resaltar la sección
+        studentsList.setBackground(marron); // Fondo para resaltar la sección
 
         // Crear un JScrollPane que contenga el JPanel
         JScrollPane scrollPane = new JScrollPane(studentsList);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         for (int i = 0; i < 4; i++) { // Lista ejemplo
+
             JPanel row = new JPanel(new BorderLayout());
             row.setBorder(BorderFactory.createEmptyBorder(40, 10, 40, 10));
+
             JLabel studentName = new JLabel("Nombre " + (i + 1));
             studentName.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
             JButton evaluationsButton = new JButton("Evaluaciones");
             evaluationsButton.setBackground(azul);
             evaluationsButton.setForeground(Color.WHITE);
@@ -239,6 +254,7 @@ public class CurseraView extends JFrame {
         return panel;
     }
 
+    //Panel de usuarios
     private JPanel createUsersScreen() {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
@@ -261,9 +277,7 @@ public class CurseraView extends JFrame {
         return panel;
     }
 
-
-
-
+    //Crear fila para cada usuario en pantalla de usuarios
     private JPanel createUserRow(String userName, String userType) {
 
         JPanel row = new JPanel(new BorderLayout());
@@ -296,59 +310,80 @@ public class CurseraView extends JFrame {
 
         // Fondo opcional para diferenciar filas
         row.setBackground(gris); // Gris claro
+        editButton.addActionListener(e -> cardLayout.show(mainPanel,"Evaluation"));
         return row;
     }
 
 
 
-
+    // Pantalla de editar evaluación de cada alumno
     private JPanel createEvaluationScreen() {
+        // Panel principal
         JPanel panel = new JPanel(new BorderLayout(10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Márgenes
 
-        // Título
-        JLabel titleLabel = new JLabel("EVALUACIONES ALUMNO NOMBRE EN CURSO X");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        panel.add(titleLabel, BorderLayout.NORTH);
 
-        // Botón de añadir nota
-        JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        // Panel de encabezado con el botón "Añadir Nota"
+        JPanel headerPanel = new JPanel(new BorderLayout());
+
+        // Título
+        JLabel titleLabel = new JLabel("EVALUACIONES ALUMNO NOMBRE EN CURSO X", JLabel.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        headerPanel.add(titleLabel, BorderLayout.WEST);
+
+        //Boton añadir nota
         JButton addNoteButton = new JButton("AÑADIR NOTA");
-        addNoteButton.setBackground(Color.GREEN);
+        addNoteButton.setBackground(verde); // Color verde
         addNoteButton.setForeground(Color.WHITE);
         addNoteButton.setFocusPainted(false);
-        headerPanel.add(addNoteButton);
+        addNoteButton.setPreferredSize(new Dimension(120, 30)); // Ajustar tamaño
 
-        panel.add(headerPanel, BorderLayout.NORTH);
+
+        headerPanel.add(addNoteButton, BorderLayout.EAST);
+
+        panel.add(headerPanel);
 
         // Tabla de evaluaciones
-        JPanel tablePanel = new JPanel(new GridLayout(0, 4, 10, 10));
-        tablePanel.setBorder(BorderFactory.createLineBorder(Color.RED));
-
-        // Encabezados de tabla
-        tablePanel.add(new JLabel("NOTA"));
-        tablePanel.add(new JLabel("FECHA"));
-        tablePanel.add(new JLabel("APROBADO"));
-        tablePanel.add(new JLabel(""));
+        JPanel tablePanel = new JPanel(new GridLayout(0, 1, 10, 10)); // Una columna de filas
+        tablePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        tablePanel.setBackground(marron); // Fondo de la tabla
 
         // Filas de ejemplo
-        for (int i = 0; i < 3; i++) {
-            JLabel noteLabel = new JLabel("Nota " + (i + 1));
-            JLabel dateLabel = new JLabel("Fecha " + (i + 1));
-            JLabel approvedLabel = new JLabel(i % 2 == 0 ? "Sí" : "No");
+        for (int i = 0; i < 4; i++) {
+            // Crear panel para cada fila
+            JPanel rowPanel = new JPanel(new GridLayout(1, 4, 10, 10));
+            rowPanel.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
+                    BorderFactory.createEmptyBorder(10, 10, 10, 10)
+            )); // Borde externo y márgenes internos
+
+            // Elementos de la fila
+            JLabel noteLabel = new JLabel("Nota " + (i + 1), JLabel.CENTER);
+            JLabel dateLabel = new JLabel("Fecha " + (i + 1), JLabel.CENTER);
+            JLabel approvedLabel = new JLabel(i % 2 == 0 ? "Aprobado" : "No aprobado", JLabel.CENTER);
 
             JButton editButton = new JButton("EDITAR");
-            editButton.setBackground(Color.GREEN);
+            editButton.setBackground(verde); // Color verde
             editButton.setForeground(Color.WHITE);
             editButton.setFocusPainted(false);
+            editButton.setPreferredSize(new Dimension(80, 30)); // Tamaño del botón
 
-            tablePanel.add(noteLabel);
-            tablePanel.add(dateLabel);
-            tablePanel.add(approvedLabel);
-            tablePanel.add(editButton);
+            // Añadir componentes a la fila
+            rowPanel.add(noteLabel);
+            rowPanel.add(dateLabel);
+            rowPanel.add(approvedLabel);
+            rowPanel.add(editButton);
+
+            // Añadir fila al panel de tabla
+            tablePanel.add(rowPanel);
         }
 
-        panel.add(tablePanel, BorderLayout.CENTER);
+        // Añadir la tabla a un JScrollPane
+        JScrollPane scrollPane = new JScrollPane(tablePanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Sin bordes extra
+
+        panel.add(scrollPane, BorderLayout.CENTER);
 
         return panel;
     }
